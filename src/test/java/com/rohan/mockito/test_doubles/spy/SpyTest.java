@@ -1,13 +1,16 @@
 package com.rohan.mockito.test_doubles.spy;
 
-import org.junit.jupiter.api.Test;
+import com.rohan.mockito.test_doubles.spy.BookRepository;
+import org.junit.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
+
 
 public class SpyTest {
 
@@ -21,6 +24,26 @@ public class SpyTest {
      * */
 
     @Test
+    public void demoSpyMockito(){
+        BookRepository bookRepositoryMock_spy = spy(BookRepository.class);
+        BookService bookService = new BookService(bookRepositoryMock_spy);
+
+        List<Book> booksThatWeWouldBeAdding = new ArrayList<Book>(
+                Arrays.asList(
+                        new Book("bookId_1" , "bookTitle_1", 23 , LocalDate.now()),
+                        new Book("bookId_2" , "bookTitle_2", 21 , LocalDate.now()),
+                        new Book("bookId_3" , "bookTitle_3", 29 , LocalDate.now()),
+                        new Book("bookId_4" , "bookTitle_4", 90 , LocalDate.now())
+                )
+        ) ;
+        booksThatWeWouldBeAdding.forEach(book -> bookService.addBook(book));
+        verify(bookRepositoryMock_spy, times(1)).save(booksThatWeWouldBeAdding.get(0));
+        verify(bookRepositoryMock_spy, times(1)).save(booksThatWeWouldBeAdding.get(1));
+        verify(bookRepositoryMock_spy, times(1)).save(booksThatWeWouldBeAdding.get(2));
+        verify(bookRepositoryMock_spy, times(1)).save(booksThatWeWouldBeAdding.get(3));
+    }
+
+    @Test
     public void demoSpy(){
         // we need to see that does the service even calls for 'bookRepository.save' method
         BookRepositorySpy bookRepositorySpy = new BookRepositorySpy();
@@ -32,7 +55,6 @@ public class SpyTest {
                         new Book("bookId_2" , "bookTitle_2", 21 , LocalDate.now()),
                         new Book("bookId_3" , "bookTitle_3", 29 , LocalDate.now()),
                         new Book("bookId_4" , "bookTitle_4", 90 , LocalDate.now())
-
                 )
         ) ;
 

@@ -1,14 +1,15 @@
 package com.rohan.mockito.test_doubles.mock;
 
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+
 
 public class MockTest {
 
@@ -53,6 +54,26 @@ public class MockTest {
                         booksThatWeWouldBeAdding.size()
         );
     };
+    @Test
+    public void demoMockMockito(){
+        BookRepository bookRepositoryMock = mock(BookRepository.class);
+        BookService bookService = new BookService(bookRepositoryMock);
+
+        List<Book> booksThatWeWouldBeAdding = new ArrayList<Book>(
+                Arrays.asList(
+                        new Book("bookId_1" , "bookTitle_1", 23 , LocalDate.now()),
+                        new Book("bookId_2" , "bookTitle_2", 21 , LocalDate.now()),
+                        new Book("bookId_3" , "bookTitle_3", 29 , LocalDate.now()),
+                        new Book("bookId_4" , "bookTitle_4", 90 , LocalDate.now())
+
+                )
+        ) ;
+        booksThatWeWouldBeAdding.forEach(book -> {bookService.addBook(book) ; lastBookAdded = book; });
+        verify(bookRepositoryMock).save(booksThatWeWouldBeAdding.get(booksThatWeWouldBeAdding.size()-1));
+
+//         if i want to verify that program didn't called up for book_1
+//        verify(bookRepositoryMock, times(0)).save(booksThatWeWouldBeAdding.get(1));
+    }
 }
 
 
