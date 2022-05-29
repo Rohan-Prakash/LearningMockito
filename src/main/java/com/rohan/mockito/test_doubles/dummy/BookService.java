@@ -1,0 +1,31 @@
+package com.rohan.mockito.test_doubles.dummy;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * if BookService is out Class under test, and its external depandency is BookRepository, so duty of testDouble is
+ * we can test BookService without actual implementation of BookRepository, we can create testDouble for BookRepo
+ *
+ * */
+@AllArgsConstructor
+@Getter
+@Setter
+public class BookService {
+    private BookRepository bookRepository;     // this is somethong that talks to database;
+    private EmailService emailService;
+
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+    public void addBook(Book book){
+        bookRepository.save(book);
+    }
+    public int findNumberOfBooks(){
+        return bookRepository.findAll().size();
+    }
+
+
+    // assume we have other methods that uses the emailService
+}
